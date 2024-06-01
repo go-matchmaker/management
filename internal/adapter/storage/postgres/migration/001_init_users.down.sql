@@ -1,2 +1,7 @@
-DROP TABLE users;
-DROP TYPE role;
+DROP TABLE IF EXISTS user_attributes;
+
+ALTER TABLE users DROP CONSTRAINT IF EXISTS role_check;
+
+DROP TABLE IF EXISTS users;
+
+DROP TABLE IF EXISTS departments;

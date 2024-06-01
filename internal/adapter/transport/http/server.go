@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/template/html/v2"
 	"go.uber.org/zap"
 	"management/internal/adapter/config"
 	"management/internal/core/port/department"
@@ -52,8 +51,6 @@ func NewHTTPServer(
 }
 
 func (s *server) Start(ctx context.Context) error {
-	engine := html.New(viewPath, renderType)
-
 	app := fiber.New(fiber.Config{
 		ReadTimeout:   time.Minute * time.Duration(s.cfg.Settings.ServerReadTimeout),
 		StrictRouting: false,
@@ -61,9 +58,8 @@ func (s *server) Start(ctx context.Context) error {
 		BodyLimit:     4 * 1024 * 1024,
 		JSONEncoder:   json.Marshal,
 		JSONDecoder:   json.Unmarshal,
-		AppName:       "Go-Gateway",
+		AppName:       "Go-management",
 		Immutable:     true,
-		Views:         engine,
 	})
 
 	s.app = app
