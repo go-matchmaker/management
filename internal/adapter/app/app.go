@@ -6,7 +6,6 @@ import (
 	"management/internal/adapter/config"
 	"management/internal/core/port/db"
 	"management/internal/core/port/http"
-	"management/internal/core/port/management"
 	"management/internal/core/port/user"
 	"sync"
 )
@@ -15,7 +14,6 @@ type App struct {
 	rw          *sync.RWMutex
 	Cfg         *config.Container
 	HTTP        http.ServerMaker
-	Token       management.TokenMaker
 	PG          db.PostgresEngineMaker
 	UserRepo    user.UserRepositoryPort
 	UserService user.UserServicePort
@@ -25,7 +23,6 @@ func New(
 	rw *sync.RWMutex,
 	cfg *config.Container,
 	http http.ServerMaker,
-	token management.TokenMaker,
 	pg db.PostgresEngineMaker,
 	userRepo user.UserRepositoryPort,
 	userService user.UserServicePort,
@@ -34,7 +31,6 @@ func New(
 		rw:          rw,
 		Cfg:         cfg,
 		HTTP:        http,
-		Token:       token,
 		PG:          pg,
 		UserRepo:    userRepo,
 		UserService: userService,

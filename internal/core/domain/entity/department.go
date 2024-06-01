@@ -1,12 +1,12 @@
 package entity
 
 import (
-	"github.com/google/uuid"
 	"time"
 )
 
 type Department struct {
-	ID        uuid.UUID `json:"id"`
+	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

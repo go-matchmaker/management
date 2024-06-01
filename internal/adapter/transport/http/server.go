@@ -1,10 +1,6 @@
 package http
 
 import (
-	"management/internal/adapter/config"
-	"management/internal/core/port/management"
-	"management/internal/core/port/http"
-	"management/internal/core/port/user"
 	"context"
 	"errors"
 	"fmt"
@@ -12,6 +8,10 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/template/html/v2"
 	"go.uber.org/zap"
+	"management/internal/adapter/config"
+	"management/internal/core/port/department"
+	"management/internal/core/port/http"
+	"management/internal/core/port/user"
 	std_http "net/http"
 	"time"
 )
@@ -27,12 +27,12 @@ var (
 
 type (
 	server struct {
-		ctx          context.Context
-		cfg          *config.Container
-		app          *fiber.App
-		cfgFiber     *fiber.Config
-		userService  user.UserServicePort
-		tokenService management.TokenMaker
+		ctx               context.Context
+		cfg               *config.Container
+		app               *fiber.App
+		cfgFiber          *fiber.Config
+		userService       user.UserServicePort
+		departmentService department.DepartmentServicePort
 	}
 )
 
@@ -40,14 +40,14 @@ func NewHTTPServer(
 	ctx context.Context,
 	cfg *config.Container,
 	userService user.UserServicePort,
-	tokenService management.TokenMaker,
+	departmentService department.DepartmentServicePort,
 ) http.ServerMaker {
 
 	return &server{
-		ctx:          ctx,
-		cfg:          cfg,
-		userService:  userService,
-		tokenService: tokenService,
+		ctx:               ctx,
+		cfg:               cfg,
+		userService:       userService,
+		departmentService: departmentService,
 	}
 }
 
