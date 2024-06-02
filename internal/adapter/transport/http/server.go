@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 	"management/internal/adapter/config"
 	"management/internal/core/attribute"
+	"management/internal/core/port/car"
 	"management/internal/core/port/department"
 	"management/internal/core/port/http"
 	"management/internal/core/port/user"
@@ -34,6 +35,7 @@ type (
 		userService       user.UserServicePort
 		attributeService  attribute.AttributeServicePort
 		departmentService department.DepartmentServicePort
+		carService        car.CarServicePort
 	}
 )
 
@@ -43,6 +45,7 @@ func NewHTTPServer(
 	userService user.UserServicePort,
 	departmentService department.DepartmentServicePort,
 	attributeService attribute.AttributeServicePort,
+	carService car.CarServicePort,
 ) http.ServerMaker {
 
 	return &server{
@@ -51,6 +54,7 @@ func NewHTTPServer(
 		userService:       userService,
 		departmentService: departmentService,
 		attributeService:  attributeService,
+		carService:        carService,
 	}
 }
 
