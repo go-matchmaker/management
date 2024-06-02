@@ -27,3 +27,11 @@ func UserCreateDtoToModel(dtoData *dto.CreateUserRequest) (entity.User, map[stri
 
 	return user, attributes
 }
+
+func DepartmentCreateDtoToModel(dtoData *dto.CreateDepartmentRequest) entity.Department {
+	return entity.Department{
+		Name:      dtoData.Name,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+}

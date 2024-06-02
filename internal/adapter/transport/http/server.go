@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"go.uber.org/zap"
 	"management/internal/adapter/config"
+	"management/internal/core/attribute"
 	"management/internal/core/port/department"
 	"management/internal/core/port/http"
 	"management/internal/core/port/user"
@@ -31,6 +32,7 @@ type (
 		app               *fiber.App
 		cfgFiber          *fiber.Config
 		userService       user.UserServicePort
+		attributeService  attribute.AttributeServicePort
 		departmentService department.DepartmentServicePort
 	}
 )

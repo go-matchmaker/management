@@ -7,4 +7,8 @@ type CreateUserRequest struct {
 	DepartmentID string                `json:"department_id"`
 }
 
+type CreateDepartmentRequest struct {
+	Name string `json:"name"`
+}
+
 // Responses

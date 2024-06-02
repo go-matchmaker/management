@@ -6,15 +6,15 @@ import (
 )
 
 type UserPermission struct {
-	User         entity.User                      `json:"user"`
-	DepartmentID string                           `json:"department"`
-	Attributes   map[string]valueobject.Attribute `json:"permissions"`
+	User           entity.User                      `json:"user"`
+	DepartmentName string                           `json:"department_name"`
+	Attributes     map[string]valueobject.Attribute `json:"permissions"`
 }
 
-func NewUserPermission(user entity.User, attributes map[string]valueobject.Attribute, departmentID string) *UserPermission {
+func NewUserPermission(user entity.User, attributes map[string]valueobject.Attribute, departmentName string) *UserPermission {
 	return &UserPermission{
-		User:         user,
-		DepartmentID: departmentID,
-		Attributes:   attributes,
+		User:           user,
+		DepartmentName: departmentName,
+		Attributes:     attributes,
 	}
 }
