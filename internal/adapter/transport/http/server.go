@@ -42,6 +42,7 @@ func NewHTTPServer(
 	cfg *config.Container,
 	userService user.UserServicePort,
 	departmentService department.DepartmentServicePort,
+	attributeService attribute.AttributeServicePort,
 ) http.ServerMaker {
 
 	return &server{
@@ -49,6 +50,7 @@ func NewHTTPServer(
 		cfg:               cfg,
 		userService:       userService,
 		departmentService: departmentService,
+		attributeService:  attributeService,
 	}
 }
 

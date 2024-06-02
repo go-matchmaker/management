@@ -7,17 +7,17 @@
 package app
 
 import (
-	"management/internal/adapter/management/paseto"
+	"context"
+	"go.uber.org/zap"
 	"management/internal/adapter/config"
 	"management/internal/adapter/storage/postgres"
 	http2 "management/internal/adapter/transport/http"
-	"management/internal/core/port/management"
+	"management/internal/core/attribute"
 	"management/internal/core/port/db"
+	"management/internal/core/port/department"
 	"management/internal/core/port/http"
 	"management/internal/core/port/user"
 	"management/internal/core/service"
-	"context"
-	"go.uber.org/zap"
 	"sync"
 )
 
@@ -29,18 +29,17 @@ func InitApp(ctx context.Context, wg *sync.WaitGroup, rw *sync.RWMutex, Cfg *con
 		return nil, nil, err
 	}
 	userRepositoryPort := psql.NewUserRepository(postgresEngineMaker)
-	tokenMaker, err := paseto.NewPaseto(Cfg)
+	userServicePort := service.NewUserService(userRepositoryPort)
+	departmentRepositoryPort := psql.NewDepartmentRepository(postgresEngineMaker)
+	departmentServicePort := service.NewDepartmentService(departmentRepositoryPort)
+	attributeRepositoryPort := psql.NewAttributeRepository(postgresEngineMaker)
+	attributeServicePort := service.NewAttributeService(attributeRepositoryPort)
+	serverMaker, cleanup2, err := httpServerFunc(ctx, Cfg, userServicePort, departmentServicePort, attributeServicePort)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	userServicePort := service.NewUserService(userRepositoryPort, tokenMaker)
-	serverMaker, cleanup2, err := httpServerFunc(ctx, Cfg, userServicePort, tokenMaker)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	app := New(rw, Cfg, serverMaker, tokenMaker, postgresEngineMaker, userRepositoryPort, userServicePort)
+	app := New(rw, Cfg, serverMaker, postgresEngineMaker, userRepositoryPort, userServicePort, departmentRepositoryPort, departmentServicePort, attributeRepositoryPort, attributeServicePort)
 	return app, func() {
 		cleanup2()
 		cleanup()
@@ -67,10 +66,11 @@ func dbEngineFunc(
 func httpServerFunc(
 	ctx context.Context,
 	Cfg *config.Container,
-	UserService user.UserServicePort,
-	tokenMaker management.TokenMaker,
+	userService user.UserServicePort,
+	departmentService department.DepartmentServicePort,
+	attributeService attribute.AttributeServicePort,
 ) (http.ServerMaker, func(), error) {
-	httpServer := http2.NewHTTPServer(ctx, Cfg, UserService, tokenMaker)
+	httpServer := http2.NewHTTPServer(ctx, Cfg, userService, departmentService, attributeService)
 	err := httpServer.Start(ctx)
 	if err != nil {
 		return nil, nil, err

@@ -4,18 +4,18 @@
 package app
 
 import (
-	"management/internal/adapter/management/paseto"
-	"management/internal/adapter/config"
-	psql "management/internal/adapter/storage/postgres"
-	adapter_http "management/internal/adapter/transport/http"
-	"management/internal/core/port/management"
-	"management/internal/core/port/db"
-	"management/internal/core/port/http"
-	"management/internal/core/port/user"
-	port_service "management/internal/core/service"
 	"context"
 	"github.com/google/wire"
 	"go.uber.org/zap"
+	"management/internal/adapter/config"
+	psql "management/internal/adapter/storage/postgres"
+	adapter_http "management/internal/adapter/transport/http"
+	"management/internal/core/attribute"
+	"management/internal/core/port/db"
+	"management/internal/core/port/department"
+	"management/internal/core/port/http"
+	"management/internal/core/port/user"
+	port_service "management/internal/core/service"
 	"sync"
 )
 
@@ -31,7 +31,10 @@ func InitApp(
 		httpServerFunc,
 		psql.UserRepositorySet,
 		port_service.UserServiceSet,
-		paseto.PasetoSet,
+		psql.DepartmentRepositorySet,
+		port_service.DepartmentServiceSet,
+		psql.AttributeRepositorySet,
+		port_service.AttributeServiceSet,
 	))
 }
 
@@ -53,10 +56,11 @@ func dbEngineFunc(
 func httpServerFunc(
 	ctx context.Context,
 	Cfg *config.Container,
-	UserService user.UserServicePort,
-	tokenMaker management.TokenMaker,
+	userService user.UserServicePort,
+	departmentService department.DepartmentServicePort,
+	attributeService attribute.AttributeServicePort,
 ) (http.ServerMaker, func(), error) {
-	httpServer := adapter_http.NewHTTPServer(ctx, Cfg, UserService, tokenMaker)
+	httpServer := adapter_http.NewHTTPServer(ctx, Cfg, userService, departmentService, attributeService)
 	err := httpServer.Start(ctx)
 	if err != nil {
 		return nil, nil, err
