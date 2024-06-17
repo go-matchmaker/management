@@ -4,9 +4,8 @@ SET TIME ZONE 'Europe/Istanbul';
 CREATE TABLE departments (
     id VARCHAR(255) PRIMARY KEY,
     name VARCHAR NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-
 );
 
 CREATE TABLE users (
@@ -16,7 +15,7 @@ CREATE TABLE users (
     surname VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     phone_number VARCHAR(20),
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     department_id VARCHAR(255) NOT NULL REFERENCES departments(id)
@@ -44,3 +43,8 @@ CREATE TABLE attributes (
     can_see_price BOOLEAN DEFAULT FALSE
 );
 
+INSERT INTO departments (id, name)
+VALUES (1, 'Super Admin');
+
+INSERT INTO users (id,role, name, surname, email, password,department_id)
+VALUES ('202406171','super_admin', 'Super', 'Admin', 'superadmin@superadmin.com', '$2a$10$kiiG/e86xezIkgp5QifAFu6ipYX8J5RPQvtP9bcA7xyu8wKvKPaMW',1);
